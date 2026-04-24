@@ -35,6 +35,22 @@ const products = [
   },
 
   {
+    id: "jbl-tune-520bt",
+    name: "JBL Tune 520BT",
+    tagline: "Kulak Üstü Kulaklık",
+    category: "kulaklik",
+    price: 1499,
+    originalPrice: 1999,
+    rating: 4.7,
+    reviews: 2876,
+    badge: "Popüler",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%281%29-TaecGzcNszCRG1VqxZUNN6eDKeABg7.webp",
+    imageAlt: "JBL Tune 520BT siyah kulak üstü kablosuz kulaklık",
+    features: ["57h Pil", "Pure Bass", "Çoklu Bağlantı"],
+    accentColor: "#ff6600",
+    accentBg: "rgba(255,102,0,0.08)",
+  },
+  {
     id: "nova-speaker",
     name: "Nova Speaker",
     tagline: "360° Surround Ses",
