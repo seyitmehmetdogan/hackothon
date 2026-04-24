@@ -92,8 +92,8 @@ const products = [
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping-gJznmmuGEXwhNStuybhxakmHSHQFY7.webp",
     images: [
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping-gJznmmuGEXwhNStuybhxakmHSHQFY7.webp",
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%282%29-dfEnimEy1XWI3MjjszpWdBxlVpZSGk.webp",
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%281%29-Flz0jdSOtVxaApkClMyxTTJut8hmWW.webp",
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%282%29-SKCARGjzkSiZWvA1kpFUxNqQQ7Xk2F.webp",
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%281%29-mJST0UsY1QP5ZWxGXMVpro7HwXo3RD.webp",
     ],
     imageAlt: "Black hoverboard with white lightning pattern design, self-balancing electric scooter",
     features: ["LED Işıklar", "Bluetooth", "15km Menzil"],
