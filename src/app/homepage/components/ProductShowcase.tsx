@@ -4,11 +4,24 @@ import AppImage from "@/components/ui/AppImage";
 import Icon from "@/components/ui/AppIcon";
 import { useCart } from "@/context/CartContext";
 
+const categories = [
+  { id: "all", name: "Tümü", icon: "Squares2X2Icon" },
+  { id: "akilli-saat", name: "Akıllı Saatler", icon: "ClockIcon" },
+  { id: "kulaklik", name: "Kulaklıklar", icon: "MusicalNoteIcon" },
+  { id: "scooter", name: "Elektrikli Scooter", icon: "BoltIcon" },
+  { id: "hoverboard", name: "Hoverboard", icon: "RocketLaunchIcon" },
+  { id: "vr", name: "VR Gözlük", icon: "EyeIcon" },
+  { id: "hoparlor", name: "Hoparlörler", icon: "SpeakerWaveIcon" },
+  { id: "klavye", name: "Klavyeler", icon: "CommandLineIcon" },
+  { id: "fare", name: "Fareler", icon: "CursorArrowRaysIcon" },
+];
+
 const products = [
   {
     id: "aura-wristband",
     name: "Aura Wristband",
     tagline: "Akıllı Sağlık Takibi",
+    category: "akilli-saat",
     price: 1299,
     originalPrice: 1799,
     rating: 4.9,
@@ -24,6 +37,7 @@ const products = [
     id: "sonic-buds",
     name: "Sonic Buds",
     tagline: "Aktif Gürültü Engelleme",
+    category: "kulaklik",
     price: 899,
     originalPrice: 1299,
     rating: 4.8,
@@ -39,6 +53,7 @@ const products = [
     id: "nova-speaker",
     name: "Nova Speaker",
     tagline: "360° Surround Ses",
+    category: "hoparlor",
     price: 1599,
     originalPrice: 2199,
     rating: 4.7,
@@ -54,6 +69,7 @@ const products = [
     id: "smart-band-pro",
     name: "Smart Band Pro",
     tagline: "Akıllı Bileklik",
+    category: "akilli-saat",
     price: 799,
     originalPrice: 1199,
     rating: 4.6,
@@ -69,6 +85,7 @@ const products = [
     id: "elektrikli-scooter",
     name: "Elektrikli Scooter",
     tagline: "Şehir İçi Ulaşım",
+    category: "scooter",
     price: 8999,
     originalPrice: 11999,
     rating: 4.8,
@@ -84,6 +101,7 @@ const products = [
     id: "hoverboard",
     name: "Hoverboard",
     tagline: "Eğlenceli Sürüş",
+    category: "hoverboard",
     price: 4499,
     originalPrice: 5999,
     rating: 4.5,
@@ -104,6 +122,7 @@ const products = [
     id: "vision-vr",
     name: "Vision VR",
     tagline: "VR Gözlük",
+    category: "vr",
     price: 12999,
     originalPrice: 15999,
     rating: 4.9,
@@ -119,6 +138,7 @@ const products = [
     id: "bass-boom",
     name: "Bass Boom",
     tagline: "Taşınabilir Hoparlör",
+    category: "hoparlor",
     price: 2199,
     originalPrice: 2999,
     rating: 4.7,
@@ -134,6 +154,7 @@ const products = [
     id: "mech-master",
     name: "Mech Master",
     tagline: "Mekanik Klavye",
+    category: "klavye",
     price: 1899,
     originalPrice: 2499,
     rating: 4.8,
@@ -149,6 +170,7 @@ const products = [
     id: "precision-mouse",
     name: "Precision Mouse",
     tagline: "Kablosuz Fare",
+    category: "fare",
     price: 1299,
     originalPrice: 1699,
     rating: 4.7,
@@ -400,6 +422,7 @@ function ProductCard({ product }: { product: (typeof products)[0] & { images?: s
 export default function ProductShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -415,6 +438,10 @@ export default function ProductShowcase() {
     return () => observer.disconnect();
   }, []);
 
+  const filteredProducts = activeCategory === "all" 
+    ? products 
+    : products.filter(p => p.category === activeCategory);
+
   return (
     <section
       id="products"
@@ -424,7 +451,7 @@ export default function ProductShowcase() {
     >
       <div className="max-w-[1024px] mx-auto px-5">
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-8">
           <div>
             <p className="apple-label mb-3">Ürünler</p>
             <h2
@@ -442,9 +469,42 @@ export default function ProductShowcase() {
           </p>
         </div>
 
+        {/* Category Filter */}
+        <div className="mb-10 overflow-x-auto pb-2 -mx-5 px-5">
+          <div className="flex gap-2 min-w-max">
+            {categories.map((category) => {
+              const isActive = activeCategory === category.id;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveCategory(category.id)}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-[13px] font-medium transition-all duration-200 hover:scale-[1.02]"
+                  style={
+                    isActive
+                      ? {
+                          background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%)",
+                          color: "white",
+                          boxShadow: "0 4px 14px rgba(26,26,46,0.25)",
+                        }
+                      : {
+                          background: "rgba(255,255,255,0.8)",
+                          color: "#5a5a7a",
+                          border: "1px solid rgba(226,232,240,0.8)",
+                          boxShadow: "0 2px 8px rgba(26,26,46,0.04)",
+                        }
+                  }
+                >
+                  <Icon name={category.icon} size={16} />
+                  {category.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {products.map((product, i) => (
+          {filteredProducts.map((product, i) => (
             <div
               key={product.id}
               className={`${visible ? `animate-fade-in-up delay-${(i + 1) * 100}` : "opacity-0"}`}
@@ -454,6 +514,15 @@ export default function ProductShowcase() {
             </div>
           ))}
         </div>
+
+        {/* Empty State */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-[16px]" style={{ color: "#8a8aaa" }}>
+              Bu kategoride henüz ürün bulunmuyor.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
