@@ -90,6 +90,11 @@ const products = [
     reviews: 654,
     badge: "Eğlenceli",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping-gJznmmuGEXwhNStuybhxakmHSHQFY7.webp",
+    images: [
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping-gJznmmuGEXwhNStuybhxakmHSHQFY7.webp",
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%282%29-dfEnimEy1XWI3MjjszpWdBxlVpZSGk.webp",
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/shopping%20%281%29-Flz0jdSOtVxaApkClMyxTTJut8hmWW.webp",
+    ],
     imageAlt: "Black hoverboard with white lightning pattern design, self-balancing electric scooter",
     features: ["LED Işıklar", "Bluetooth", "15km Menzil"],
     accentColor: "#ec4899",
@@ -157,9 +162,14 @@ const products = [
   },
 ];
 
-function ProductCard({ product }: { product: (typeof products)[0] }) {
+function ProductCard({ product }: { product: (typeof products)[0] & { images?: string[] } }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const images = product.images || [product.image];
+  const hasMultipleImages = images.length > 1;
 
   const handleAdd = () => {
     addItem({
@@ -176,6 +186,16 @@ function ProductCard({ product }: { product: (typeof products)[0] }) {
     ((product.originalPrice - product.price) / product.originalPrice) * 100
   );
 
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
   return (
     <div
       className="group rounded-[24px] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col"
@@ -186,10 +206,12 @@ function ProductCard({ product }: { product: (typeof products)[0] }) {
         boxShadow: "0 4px 24px rgba(26,26,46,0.06)",
       }}
       onMouseEnter={(e) => {
+        setIsHovered(true);
         (e.currentTarget as HTMLDivElement).style.boxShadow =
           "0 16px 48px rgba(26,26,46,0.10), 0 0 0 1px rgba(255,255,255,0.9)";
       }}
       onMouseLeave={(e) => {
+        setIsHovered(false);
         (e.currentTarget as HTMLDivElement).style.boxShadow =
           "0 4px 24px rgba(26,26,46,0.06)";
       }}
@@ -200,12 +222,64 @@ function ProductCard({ product }: { product: (typeof products)[0] }) {
         style={{ background: product.accentBg }}
       >
         <AppImage
-          src={product.image}
+          src={images[currentImageIndex]}
           alt={product.imageAlt}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
+        
+        {/* Navigation Arrows - Only show on hover for products with multiple images */}
+        {hasMultipleImages && isHovered && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+              style={{
+                background: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              }}
+            >
+              <Icon name="ChevronLeftIcon" size={16} className="text-gray-700" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+              style={{
+                background: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              }}
+            >
+              <Icon name="ChevronRightIcon" size={16} className="text-gray-700" />
+            </button>
+          </>
+        )}
+
+        {/* Image Indicators */}
+        {hasMultipleImages && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex(index);
+                }}
+                className="w-2 h-2 rounded-full transition-all duration-200"
+                style={{
+                  background: index === currentImageIndex 
+                    ? product.accentColor 
+                    : "rgba(255,255,255,0.6)",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                  transform: index === currentImageIndex ? "scale(1.2)" : "scale(1)",
+                }}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Badge */}
         <div className="absolute top-4 left-4">
           <span
